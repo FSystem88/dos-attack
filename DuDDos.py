@@ -88,7 +88,6 @@ def send (site, proxy):
 				req = requests.get (site, headers = headers, proxies = prox)
 				print (Fore.GREEN + 'Запрос на ' + site + ' Выполнен')
 		except:
-			print (Fore.RED + 'Запрос не выполнен, переключаюсь на новое прокси')
 			continue
 
 
