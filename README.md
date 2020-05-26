@@ -9,7 +9,7 @@
 5. <code>cd DuDDos</code>
 6. <code>python DuDDos.py</code>
 
-На Андроиде в Termux перед пунктом №3 надо ввести запуском надо ввести:<br>
+На Андроиде в Termux перед пунктом №3 надо ввести:<br>
 <code>apt install libxml2 libxslt</code>
 
 
