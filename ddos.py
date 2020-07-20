@@ -93,7 +93,7 @@ def main ():
 		thread = 500
 
 	if proxy.strip () == '':
-		get_proxy ('https://api.proxyscrape.com/?request=displayproxies&proxytype=http&timeout=1000&country=all&anonymity=elite&ssl=yes')
+		get_proxy ('https://api.proxyscrape.com/?request=displayproxies&proxytype=http&timeout=2000&country=all&anonymity=elite&ssl=yes')
 		proxy = 'proxies.txt'
 
 	thread_list = []
