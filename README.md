@@ -1,9 +1,12 @@
 # DoS attack
 Вроде дудосит, вроде нет. Вообщем программа создана в ознакомительных целях!
 
+# Обязательно подпишитесь на канал в телеграме, там может решаться дальнейшая судьба проекта или очень важная информация!!!
+<br><b>---> <a href="https://t.me/FS88ch">Канал в Telegram</a> <---</b><br>
+
 # Установка
-1. <code>apt update && apt upgrade</code>
-2. <code>apt install git python</code> и согласиться: введя Y и нажав Enter
+1. <code>apt update && apt upgrade -y</code>
+2. <code>apt install git python -y</code> и согласиться: введя Y и нажав Enter
 
 На Андроиде в Termux перед пунктом №3 надо ввести:<br>
 <code>apt install libxml2 libxslt</code>
