@@ -1,5 +1,6 @@
 # DoS attack
-Вроде дудосит, вроде нет. Вообщем программа создана в ознакомительных целях!
+The program uses a simple type of DDoS attack "HTTP flood" using multithreading and a proxies. The program was created for informational purposes!<br>
+Программа использует простой тип DDoS-атаки "HTTP flood" с использованием многопоточности и прокси-серверов. Программа была создана в информационных целях!
 
 # Обязательно подпишитесь на канал в телеграме, там может решаться дальнейшая судьба проекта или очень важная информация!!!
 <br><b>---> <a href="https://t.me/FS88ch">Канал в Telegram</a> <---</b><br>
@@ -14,7 +15,17 @@
 3. <code>python -m pip install requests bs4 colorama lxml</code>
 4. <code>git clone https://github.com/FSystem88/dos-attack</code>
 5. <code>cd dos-attack</code>
-6. <code>python ddos.py</code>
+
+# Запуск
+• <code>python ddos.py</code><br><br>
+Usage: ddos.py [OPTIONS]<br>
+Options:<br>
+<code>--proxy</code> - TEXT - File with a proxy<br>
+<code>--help</code> - Show this message and exit.<br>
+Example:<br>
+<code>python ddos.py</code><br>
+or<br>
+<code>python ddos.py --proxy "dicts/proxies.txt"</code><br>
 
 # Обновить
 <code>cd ~/dos-attack/ && git pull</code>
