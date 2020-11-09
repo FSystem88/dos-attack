@@ -29,6 +29,10 @@ Example:<br>
 or<br>
 <code>python ddos.py --proxy "dicts/proxies.txt"</code><br>
 
+# For Windows
+Просто скачать и заупстить EXE:<br>
+https://fsystem88.ru/programs/ddos.exe
+
 # Обновить
 <code>cd ~/dos-attack/ && git pull</code>
 
