@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import requests as r, os, threading, sys, random, re, time, click
 from threading import Thread
 from colorama import Fore,Style
