@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import requests as r, os, threading, sys, random, re, time, click
 from threading import Thread
@@ -6,7 +6,7 @@ from colorama import Fore,Style
 from bs4 import BeautifulSoup
 
 def check_prox(array, qtime):
-	ip = r.post("http://v4.ident.me/").text
+	ip = r.post("http://fsystem88.ru/ip").text
 	open("ddprox.txt", "w+").close()
 	for prox in array:
 		thread_list = []
@@ -45,7 +45,7 @@ def randomString(size):
 
 def check(ip, prox, qtime):
 	try:
-		ipx = r.get("http://v4.ident.me/", proxies={'http':prox, 'https':prox}, verify=False, timeout=qtime).text
+		ipx = r.get("http://fsystem88.ru/ip", proxies={'http':prox, 'https':prox}, verify=False, timeout=qtime).text
 	except:
 		ipx = ip
 	if ip != ipx:
