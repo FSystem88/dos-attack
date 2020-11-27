@@ -45,7 +45,7 @@ def randomString(size):
 
 def check(ip, prox, qtime):
 	try:
-		ipx = r.get("http://fsystem88.ru/ip", proxies={'http':prox, 'https':prox}, verify=False, timeout=qtime).text
+		ipx = r.get("http://fsystem88.ru/ip", proxies={'http': "http://{}".format(prox), 'https':"http://{}".format(prox)}, verify=False, timeout=qtime).text
 	except:
 		ipx = ip
 	if ip != ipx:
