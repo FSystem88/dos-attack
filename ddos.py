@@ -3,7 +3,6 @@
 import requests as r, os, threading, sys, random, re, time, click
 from threading import Thread
 from colorama import Fore,Style
-from bs4 import BeautifulSoup
 
 def check_prox(array, qtime):
 	ip = r.post("http://fsystem88.ru/ip").text
