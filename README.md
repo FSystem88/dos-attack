@@ -15,15 +15,17 @@ The program uses a simple type of DDoS attack "HTTP flood" using multithreading 
 5. <code>cd dos-attack</code>
 
 # Запуск
-• <code>python ddos.py</code><br><br>
-Usage: ddos.py [OPTIONS]<br>
-Options:<br>
-<code>--proxy</code> - TEXT - File with a proxy<br>
-<code>--help</code> - Show this message and exit.<br>
-Example:<br>
-<code>python ddos.py</code><br>
-or<br>
-<code>python ddos.py --proxy "dicts/proxies.txt"</code><br>
+    py3 ddos.py --help
+    Usage: ddos.py [OPTIONS]
+
+    Options:
+      -p, --proxy TEXT  File with a proxy
+      -u, --url TEXT    URL
+      --help            Show this message and exit.
+      
+Либо просто:
+
+    python3 ddos.py
 
 # For Windows
 Просто скачать и заупстить EXE:<br>
