@@ -53,8 +53,6 @@ def check(ip, prox, qtime):
 		f = open("ddprox.txt", "a+")
 		f.write("{}\n".format(prox))
 		f.close()
-	else:
-		print(Fore.RED+"{} bad".format(prox))
 
 def ddos(prox, url):
 	useragent()
