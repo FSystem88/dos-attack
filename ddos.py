@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-# Dev: FSystem88
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import requests as r, os, threading, sys, random, re, time, click
 from threading import Thread
