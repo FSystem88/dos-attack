@@ -1,8 +1,8 @@
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) [![GitHub contributors](https://img.shields.io/github/contributors/fsystem88/dos-attack.svg)](https://GitHub.com/fsystem88/dos-attack/graphs/contributors/) ![repo-size](https://img.shields.io/github/repo-size/fsystem88/dos-attack)
 
 # DoS attack
-The program uses a simple type of DDoS attack "HTTP flood" using multithreading and a proxies. The program was created for informational purposes!<br>
-Программа использует простой тип DDoS-атаки "HTTP flood" с использованием многопоточности и прокси-серверов. Программа была создана в информационных целях!
+The program uses a simple type of DDoS attack "HTTP flood" using multithreading and bots (proxy servers). The program was created for informational purposes!
+Программа использует простой тип DDoS-атаки "HTTP flood" с использованием многопоточности и ботов (прокси-серверов). Программа была создана в информационных целях!
 
 # Обязательно подпишитесь на канал в телеграме, там может решаться дальнейшая судьба проекта или очень важная информация!!!
 <br><b>---> <a href="https://t.me/FS88ch">Канал в Telegram</a> <---</b><br>
@@ -15,7 +15,7 @@ The program uses a simple type of DDoS attack "HTTP flood" using multithreading 
 5. <code>cd dos-attack</code>
 
 # Запуск
-    py3 ddos.py --help
+    python3 ddos.py --help
     Usage: ddos.py [OPTIONS]
 
     Options:
