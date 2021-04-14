@@ -11,7 +11,7 @@ The program uses a simple type of DDoS attack "HTTP flood" using multithreading 
 # Установка
 1. <code>apt update && apt upgrade -y</code>
 2. <code>apt install git python -y</code> и согласиться: введя Y и нажав Enter
-3. <code>python -m pip install requests colorama click</code>
+3. <code>python -m pip install requests colorama click fake_headers</code>
 4. <code>git clone https://github.com/FSystem88/dos-attack</code>
 5. <code>cd dos-attack</code>
 
