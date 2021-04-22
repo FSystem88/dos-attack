@@ -30,7 +30,7 @@ The program uses a simple type of DDoS attack "HTTP flood" using multithreading 
 
 # For Windows
 Просто скачать и заупстить EXE:<br>
-https://fsystem88.ru/programs/ddos.exe
+https://fsystem88.ru/programs/DDOS.exe
 
 # Обновить
 <code>cd ~/dos-attack/ && git pull</code>
